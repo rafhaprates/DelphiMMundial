@@ -1,0 +1,74 @@
+object frmAlterar: TfrmAlterar
+  Left = 0
+  Top = 0
+  BorderStyle = bsSingle
+  Caption = 'Alterar'
+  ClientHeight = 309
+  ClientWidth = 723
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poDesktopCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object lbl_nome: TLabel
+    Left = 24
+    Top = 24
+    Width = 27
+    Height = 13
+    Caption = 'Nome'
+    FocusControl = edt_nome
+  end
+  object lbl_endereco: TLabel
+    Left = 24
+    Top = 64
+    Width = 45
+    Height = 13
+    Caption = 'Endere'#231'o'
+    FocusControl = edt_endereco
+  end
+  object lbl_cidade: TLabel
+    Left = 24
+    Top = 104
+    Width = 33
+    Height = 13
+    Caption = 'Cidade'
+    FocusControl = edt_cidade
+  end
+  object edt_nome: TDBEdit
+    Left = 24
+    Top = 40
+    Width = 329
+    Height = 21
+    DataField = 'Nome'
+    DataSource = DataSource1
+    TabOrder = 0
+  end
+  object edt_endereco: TDBEdit
+    Left = 24
+    Top = 80
+    Width = 329
+    Height = 21
+    DataField = 'Endere'#231'o'
+    DataSource = DataSource1
+    TabOrder = 1
+  end
+  object edt_cidade: TDBEdit
+    Left = 24
+    Top = 120
+    Width = 329
+    Height = 21
+    DataField = 'Cidade'
+    DataSource = DataSource1
+    TabOrder = 2
+  end
+  object DataSource1: TDataSource
+    DataSet = Form1.ADOQuery1
+    Left = 376
+    Top = 16
+  end
+end

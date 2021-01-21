@@ -1,0 +1,278 @@
+unit UnitPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Data.Win.ADODB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Menus, Vcl.StdCtrls,
+  Vcl.Imaging.pngimage, frxClass, frxExportBaseDialog, frxExportPDF, frxDBSet;
+
+type
+  TForm1 = class(TForm)
+    ADOConnection1: TADOConnection;
+    dbRegistros: TDBGrid;
+    DataSource1: TDataSource;
+    ADOQuery1: TADOQuery;
+    Image1: TImage;
+    btn_incluir: TButton;
+    btn_alterar: TButton;
+    btn_deletar: TButton;
+    btn_consultar: TButton;
+    edt_Consulta: TEdit;
+    cmbPesquisar: TComboBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    txt_teste: TLabel;
+    ADOQuery1Nome: TStringField;
+    ADOQuery1Código: TAutoIncField;
+    ADOQuery1Endereço: TStringField;
+    ADOQuery1Cidade: TStringField;
+    btn_imprimir: TButton;
+    rel_cadastro: TfrxReport;
+    frx_cadastro: TfrxDBDataset;
+    frxPDFExport1: TfrxPDFExport;
+    procedure btn_deletarClick(Sender: TObject);
+    procedure btn_alterarClick(Sender: TObject);
+    procedure btn_incluirClick(Sender: TObject);
+    procedure btn_imprimirClick(Sender: TObject);
+    procedure dbRegistrosTitleClick(Column: TColumn);
+    procedure btn_consultarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  SqlConsultaPadrao: TStrings;
+
+implementation
+
+{$R *.dfm}
+
+uses UnitAlterar, Unitincluir;
+
+procedure TForm1.btn_consultarClick(Sender: TObject);
+begin
+        if (edt_Consulta.Text = '') or (cmbPesquisar.Text = '') then
+        Begin
+             Application.MessageBox('A pesquisa não pode ficar em Branco!', 'Atenção!', MB_OK);
+        End Else
+        Begin
+          if cmbPesquisar = 'Nome'  then
+          Begin
+           With ADOQuery1 do
+              Begin
+                Close();
+                SQL.Clear;
+                SQL.Add('select clientesCodigo as ''Código'',');
+                SQL.Add('       clienteNome as ''Nome'' ,');
+                SQL.Add('     clienteEndereco as ''Endereço'' , ');
+                SQL.Add('   clienteCidade  as ''Cidade'' from clientes ');
+                SQL.Add('                 where D_E_L_E_T = ''  and   clienteNome like ''%' +edt_Consulta.Text + '&%'' ''');
+                SQL.Add('                 Order by clienteNome  ');
+
+              Open;
+              End;
+          End;
+          
+        End;
+        
+end;
+
+procedure TForm1.btn_deletarClick(Sender: TObject);
+ {
+    Autor: Rafhael Prates 
+    Email: rafhael@rafhaprates.dev
+    Data: 16/01/2021
+    Função: Essa Procedure tem como o objetivo de excluir um registro selecionado no DBGrid
+    Observações: Ela faz 2 validações, a primeira veirficar se tem algum registro no DBGrid, se tiver ele vai para a outra
+    validação se o usuario deseja alterar, por Padrão o sistema não exclui o registro de fato, para que possa ser recuperado
+    posteriormente, apenas fazer o update no campo D_E_L_E_T = '*' assim não sendo exibido no DBGrid
+  }
+var
+  listaCodigoRegistro: string;
+
+begin
+  if dbRegistros.DataSource.DataSet.RecordCount = 0 then
+  Begin
+    Application.MessageBox('Não tem registros para apagar!', 'Atenção!', MB_OK);
+  end
+  else
+  Begin
+    if MessageDlg('Tem certeza que deseja excluir a Informação?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      listaCodigoRegistro := dbRegistros.Columns[0].Field.Value;
+
+      with ADOQuery1 do
+      Begin
+        Close();
+        SQL.Clear;
+        SQL.Add('UPDATE clientes');
+        SQL.Add('       SET D_E_L_E_T = ''*''    ');
+        SQL.Add('WHERE clientesCodigo = ' + listaCodigoRegistro);
+        ExecSQL;
+        Close();
+        SQL.Add('select clientesCodigo as ''Código'', clienteNome as ''Nome'' , clienteEndereco as ''Endereço'' , clienteCidade  as ''Cidade'' from clientes where D_E_L_E_T = ''''');
+        Open();
+        Application.MessageBox('Registro apagado com sucesso!',
+          'Atenção!', MB_OK);
+      End;
+
+    End;
+  End;
+
+End;
+
+procedure TForm1.btn_imprimirClick(Sender: TObject);
+  {
+    Autor: Rafhael Prates
+    Email: rafhael@rafhaprates.dev
+    Data:  18/01/2020
+    Função: Essa procedure chama o FastReports 6
+    Observação: o Fast reports imprime todos os dados contidos no DBGrid
+  }
+begin
+  rel_cadastro.ShowReport();
+end;
+
+procedure TForm1.btn_incluirClick(Sender: TObject);
+  {
+    Autor:  Rafhael Prates
+    Email:  rafhael@rafhaprates.dev
+    Data:   17/01/2020
+    Função:  Essa prociedure chama o formulario frmInserir 
+    Observação: Inclusão de novos registros no DBGrid.
+  }
+begin
+  frmInserir.ShowModal;
+end;
+
+procedure TForm1.btn_alterarClick(Sender: TObject);
+  {
+    Autor: Rafhael Prates 
+    Email: rafhael@rafhaprates.dev
+    Data: 17/01/2021
+    Função: Essa Procedure tem como o objetivo de chamar a UnitAlterar para Alteração do registros no DB
+    Observações: Ela faz 2 validações, a primeira veirficar se tem algum registro no DBGrid, se tiver ele vai para a outra
+    validação que no caso é perguntar ao usuario se ele deseja realmente alterar aquele registro.
+    As demais operações estão no form frmAlterar
+  }
+begin
+  if dbRegistros.DataSource.DataSet.RecordCount = 0 then
+  Begin
+    Application.MessageBox('Não tem registros para serem alterados!',
+      'Atenção!', MB_OK);
+  end
+  else
+  Begin
+    if MessageDlg('Tem certeza que deseja alterar a Informação?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+
+      frmAlterar.edt_nomeAlterar.Text := dbRegistros.Fields[1].Value;
+      frmAlterar.edt_enderecoAlterar.Text := dbRegistros.Fields[2].Value;
+      frmAlterar.edt_cidadeAlterar.Text := dbRegistros.Fields[3].Value;
+      ADOQuery1.Edit;
+      frmAlterar.ShowModal;
+    end;
+
+  End;
+end;
+
+procedure TForm1.dbRegistrosTitleClick(Column: TColumn);
+  {
+    Autor: Rafhael Prates 
+    Email: rafhael@rafhaprates.dev
+    Data: 18/01/2021
+    Função: Essa Procedure tem como o objetivo ordenar o DBGrid pelas suas respectivas colunas.
+    Observações: 
+    Nesse caso não podemos usar o Switch Case por que ele não permite comparar String, somente char e int 
+    Então nesse caso a melhor solução foi usar o If 
+  }
+var
+  i: Integer;
+  instrucaoSQL:string;
+begin
+  for i := 0 to dbRegistros.Columns.Count - 1 do
+    dbRegistros.Columns[i].Title.Font.Style := [];
+    
+  if Column.FieldName = 'Nome' then
+     Begin
+         with ADOQuery1 do
+              Begin
+                Close();
+                SQL.Clear;
+                SQL.Add('select clientesCodigo as ''Código'',');
+                SQL.Add('       clienteNome as ''Nome'' ,');
+                SQL.Add('     clienteEndereco as ''Endereço'' , ');
+                SQL.Add('   clienteCidade  as ''Cidade'' from clientes ');
+                SQL.Add('                 where D_E_L_E_T = '' '' ');
+                SQL.Add('                 Order by clienteNome  ');
+
+              Open;
+              End;
+
+      Column.Title.Font.Style := [fsBold];
+     End
+     Else if Column.FieldName = 'Código'  then
+     Begin
+         with ADOQuery1 do
+              Begin
+                Close();
+                SQL.Clear;
+                SQL.Add('select clientesCodigo as ''Código'',');
+                SQL.Add('       clienteNome as ''Nome'' ,');
+                SQL.Add('     clienteEndereco as ''Endereço'' , ');
+                SQL.Add('   clienteCidade  as ''Cidade'' from clientes ');
+                SQL.Add('                 where D_E_L_E_T = '' '' ');
+                SQL.Add('                 Order by clientesCodigo  ');
+
+              Open;
+              End;
+
+      Column.Title.Font.Style := [fsBold];
+     End   
+        Else if Column.FieldName = 'Endereço'  then
+     Begin
+         with ADOQuery1 do
+              Begin
+                Close();
+                SQL.Clear;
+                SQL.Add('select clientesCodigo as ''Código'',');
+                SQL.Add('       clienteNome as ''Nome'' ,');
+                SQL.Add('     clienteEndereco as ''Endereço'' , ');
+                SQL.Add('   clienteCidade  as ''Cidade'' from clientes ');
+                SQL.Add('                 where D_E_L_E_T = '' '' ');
+                SQL.Add('                 Order by clienteEndereco  ');
+
+              Open;
+              End;
+
+      Column.Title.Font.Style := [fsBold];
+     End   
+         Else if Column.FieldName = 'Cidade'  then
+     Begin
+         with ADOQuery1 do
+              Begin
+                Close();
+                SQL.Clear;
+                SQL.Add('select clientesCodigo as ''Código'',');
+                SQL.Add('       clienteNome as ''Nome'' ,');
+                SQL.Add('     clienteEndereco as ''Endereço'' , ');
+                SQL.Add('   clienteCidade  as ''Cidade'' from clientes ');
+                SQL.Add('                 where D_E_L_E_T = '' '' ');
+                SQL.Add('                 Order by clienteCidade  ');
+
+              Open;
+              End;
+
+      Column.Title.Font.Style := [fsBold];
+     End   
+end;
+
+end.

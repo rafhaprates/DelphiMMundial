@@ -1,0 +1,65 @@
+unit Unitincluir;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TfrmInserir = class(TForm)
+    edt_nomeInserir: TEdit;
+    edt_enderecoInserir: TEdit;
+    edt_cidadeInserir: TEdit;
+    lbl_cidadeInserir: TLabel;
+    lbl_nomeInserir: TLabel;
+    lbl_enderecoInserir: TLabel;
+    btn_gravar: TButton;
+    btn_sair: TButton;
+    procedure btn_sairClick(Sender: TObject);
+    procedure btn_gravarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmInserir: TfrmInserir;
+
+implementation
+
+{$R *.dfm}
+
+uses UnitAlterar, UnitPrincipal;
+
+procedure TfrmInserir.btn_gravarClick(Sender: TObject);
+begin
+    with Form1.ADOQuery1 do
+    Begin
+      Close;
+      SQL.Clear;
+      SQL.Add('insert into clientes ( clienteNome, clienteEndereco, clienteCidade, D_E_L_E_T) values (:Cliente, :Endereco, :Cidade, :Delete)' );
+      Parameters.ParamByName('Cliente').Value := edt_nomeInserir.Text;
+      Parameters.ParamByName('Endereco').Value := edt_enderecoInserir.Text;
+      Parameters.ParamByName('Cidade').Value := edt_cidadeInserir.Text;
+      Parameters.ParamByName('Delete').Value := '';
+      ExecSQL;
+      Close;
+      SQL.Clear;
+      SQL.Add('select clientesCodigo as ''Código'', clienteNome as ''Nome'' , clienteEndereco as ''Endereço'' , clienteCidade  as ''Cidade'' from clientes where D_E_L_E_T = ''''');
+      Open();
+      Application.MessageBox('Registro inserido com Sucesso com sucesso!', 'Atenção!', MB_OK);
+
+      edt_nomeInserir.Clear;
+      edt_enderecoInserir.Clear;
+      edt_cidadeInserir.Clear;
+    End;
+end;
+
+procedure TfrmInserir.btn_sairClick(Sender: TObject);
+begin
+      frmInserir.Close;
+end;
+
+end.

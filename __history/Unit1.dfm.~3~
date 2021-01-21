@@ -1,0 +1,114 @@
+﻿object Form1: TForm1
+  Left = 0
+  Top = 0
+  BorderStyle = bsNone
+  Caption = 'Mundial Editora - Teste Delphi'
+  ClientHeight = 354
+  ClientWidth = 775
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label3: TLabel
+    Left = 216
+    Top = 168
+    Width = 33
+    Height = 13
+    Caption = 'Cidade'
+  end
+  object DBGrid1: TDBGrid
+    Left = 8
+    Top = 168
+    Width = 745
+    Height = 139
+    DataSource = DataSource1
+    TabOrder = 0
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+  end
+  object ADOConnection1: TADOConnection
+    Connected = True
+    ConnectionString = 
+      'Provider=SQLNCLI11.1;Persist Security Info=False;User ID=sa;Pass' +
+      'word=sasasa;Initial Catalog=mundial_editora;Data Source=(local);' +
+      'Use Procedure for Prepare=1;Auto Translate=True;Packet Size=4096' +
+      ';Workstation ID=INFO01;Initial File Name="";Use Encryption for D' +
+      'ata=False;Tag with column collation when possible=False;MARS Con' +
+      'nection=False;DataTypeCompatibility=0;Trust Server Certificate=F' +
+      'alse;Application Intent=READWRITE;'
+    LoginPrompt = False
+    Provider = 'SQLNCLI11.1'
+    Left = 688
+    Top = 120
+  end
+  object DataSource1: TDataSource
+    DataSet = ADOQuery1
+    Left = 568
+    Top = 120
+  end
+  object ADOQuery1: TADOQuery
+    Active = True
+    Connection = ADOConnection1
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      
+        'select clientesCodigo as '#39'C'#243'digo'#39', clienteNome as '#39'Nome'#39' , clien' +
+        'teEndereco as '#39'Endere'#231'o'#39' , clienteCidade  as '#39'Cidade'#39' from clien' +
+        'tes')
+    Left = 632
+    Top = 120
+    object ADOQuery1Código: TAutoIncField
+      FieldName = 'C'#243'digo'
+      ReadOnly = True
+    end
+    object ADOQuery1Nome: TStringField
+      FieldName = 'Nome'
+      Size = 25
+    end
+    object ADOQuery1Endereço: TStringField
+      FieldName = 'Endere'#231'o'
+      Size = 50
+    end
+    object ADOQuery1Cidade: TStringField
+      FieldName = 'Cidade'
+      Size = 30
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 512
+    Top = 120
+    object Cadastro1: TMenuItem
+      Caption = 'Cadastro'
+      object AtualizaroGrid1: TMenuItem
+        Caption = 'Atualizar o Grid'
+      end
+      object Inserir1: TMenuItem
+        Caption = 'Inserir'
+      end
+      object Deletar1: TMenuItem
+        Caption = 'Deletar'
+      end
+      object Atualizar1: TMenuItem
+        Caption = 'Atualizar'
+      end
+    end
+    object ImprimirRelatorio1: TMenuItem
+      Caption = 'Imprimir Relatorio'
+    end
+    object Sair1: TMenuItem
+      Caption = 'Sair'
+      OnClick = Sair1Click
+    end
+  end
+end

@@ -1,0 +1,100 @@
+unit Unit1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Data.Win.ADODB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls, Vcl.DBCtrls, Vcl.Menus, Vcl.StdCtrls,
+  Vcl.Imaging.pngimage;
+
+type
+  TForm1 = class(TForm)
+    ADOConnection1: TADOConnection;
+    dbRegistros: TDBGrid;
+    DataSource1: TDataSource;
+    ADOQuery1: TADOQuery;
+    ADOQuery1Nome: TStringField;
+    ADOQuery1Endereço: TStringField;
+    ADOQuery1Cidade: TStringField;
+    ADOQuery1Código: TAutoIncField;
+    MainMenu1: TMainMenu;
+    ImprimirRelatorio1: TMenuItem;
+    Image1: TImage;
+    Button1: TButton;
+    Button2: TButton;
+    btn_deletar: TButton;
+    btn_consultar: TButton;
+    edt_consulta: TEdit;
+    cmb_pesquisar: TComboBox;
+    Label1: TLabel;
+    Label2: TLabel;
+    txt_teste: TLabel;
+    procedure Sair1Click(Sender: TObject);
+    procedure btn_deletarClick(Sender: TObject);
+    procedure cmb_pesquisarChange(Sender: TObject);
+    procedure btn_consultarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.btn_consultarClick(Sender: TObject);
+var i:Integer;
+begin
+
+end;
+
+procedure TForm1.btn_deletarClick(Sender: TObject);
+var
+   listaCodigoRegistro:string;
+
+begin
+  if dbRegistros.DataSource.DataSet.RecordCount=0 then
+       Begin
+         Application.MessageBox('Não tem registros para apagar!', 'Atenção!', MB_OK);
+      end
+    else
+      Begin
+       if MessageDlg ('Tem certeza que deseja excluir a Informação?',mtConfirmation,[mbYes,mbNo],0)= mrYes then begin
+       listaCodigoRegistro := dbRegistros.Columns[0].Field.Value;
+
+       with ADOQuery1 do
+          Begin
+          Close();
+            SQL.Clear;
+              SQL.Add('UPDATE clientes');
+              SQL.Add('       SET D_E_L_E_T = ''*''    ');
+              SQL.Add('WHERE clientesCodigo = ' + listaCodigoRegistro);
+          ExecSQL;
+        Close();
+              SQL.Add('select clientesCodigo as ''Código'', clienteNome as ''Nome'' , clienteEndereco as ''Endereço'' , clienteCidade  as ''Cidade'' from clientes where D_E_L_E_T = ''''');
+              Open();
+         Application.MessageBox('Registro apagado com sucesso!', 'Atenção!', MB_OK);
+        End;
+
+       End;
+    End;
+
+
+procedure TForm1.cmb_pesquisarChange(Sender: TObject);
+var
+    i:Integer;
+begin
+
+end;
+
+procedure TForm1.Sair1Click(Sender: TObject);
+begin
+       Application.Terminate
+end;
+
+end.

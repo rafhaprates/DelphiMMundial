@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2021/01/15 09:56:27.000.166,=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/01/15 10:33:45.000.542,=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2021/01/15 12:27:55.000.053,C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
+    <Transaction>2021/01/16 09:13:49.000.677,=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2021/01/16 09:14:00.000.950,C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\UnitAlterar.dfm=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit2.dfm</Transaction>
+    <Transaction>2021/01/16 09:14:00.000.950,C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\UnitAlterar.pas=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2021/01/16 09:16:02.000.426,C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\UnitPrincipal.dfm=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
+    <Transaction>2021/01/16 09:16:02.000.426,C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\UnitPrincipal.pas=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2021/01/16 15:34:18.000.616,=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2021/01/16 15:35:24.000.484,C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unitincluir.pas=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2021/01/16 15:35:24.000.484,C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unitincluir.dfm=C:\Users\sysadmin\Documents\Embarcadero\Studio\Projects\Unit2.dfm</Transaction>
+  </Transactions>
+</BorlandProject>
